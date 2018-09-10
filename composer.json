@@ -1,0 +1,13 @@
+{
+    "name": "mitsuru793/sandbox-elasticsearch",
+    "authors": [
+        {
+            "name": "mitsuru793",
+            "email": "mitsuru793@gmail.com"
+        }
+    ],
+    "require": {
+        "ruflin/elastica": "^6.0",
+        "symfony/var-dumper": "^4.1"
+    }
+}
