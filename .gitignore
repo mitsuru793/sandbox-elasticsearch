@@ -1,0 +1,4 @@
+/vendor/
+/lib/
+.idea
+yarn-error.log
