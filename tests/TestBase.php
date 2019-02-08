@@ -28,11 +28,7 @@ abstract class TestBase extends TestCase
         $this->client = new Client();
 
         $this->index = $this->client->getIndex('test-index');
-
-        if ($this->index->exists()) {
-            $this->index->delete();
-        }
-
+        $this->clearIndex();
         $this->createIndex();
         $this->type = $this->index->getType('test-type');
     }
@@ -44,5 +40,12 @@ abstract class TestBase extends TestCase
     protected function createIndex()
     {
         $this->index->create([], true);
+    }
+
+    protected function clearIndex()
+    {
+        if ($this->index->exists()) {
+            $this->index->delete();
+        }
     }
 }
