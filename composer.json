@@ -1,5 +1,8 @@
 {
     "name": "mitsuru793/sandbox-elasticsearch",
+    "scripts": {
+        "test": "phpunit --color=always"
+    },
     "authors": [
         {
             "name": "mitsuru793",
