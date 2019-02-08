@@ -1,40 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace EsExample;
+namespace Php;
 
-use Elastica\Client;
 use Elastica\Document;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html
  */
-final class TermNotMatchTest extends TestCase
+final class TermNotMatchTest extends TestBase
 {
-    /** @var \Elastica\Index */
-    private $index;
-
-    /** @var \Elastica\Type */
-    private $type;
-
-    /** @var Client */
-    private $client;
-
     /**
      * @throws \Elastica\Exception\InvalidException
      * @throws \Elastica\Exception\ResponseException
      */
-    public function setUp()
+    public function createIndex()
     {
-        $this->client = new Client();
-
-        $this->index = $this->client->getIndex('test-index');
-
-        if ($this->index->exists()) {
-            $this->index->delete();
-        }
-
         $this->index->create([
             'mappings' => [
                 '_doc' => [
@@ -43,20 +24,19 @@ final class TermNotMatchTest extends TestCase
                             'type' => 'text',
                         ],
                         'exact_value' => [
-                            'type' => 'keyword'
+                            'type' => 'keyword',
                         ],
                     ],
                 ],
             ],
         ], true);
-        $this->type = $this->index->getType('_doc');
     }
 
     public function testMain()
     {
         $doc = new Document(1, [
             'full_text' => 'Quick Foxes!',
-            'exact_value' => 'Quick Foxes!'
+            'exact_value' => 'Quick Foxes!',
         ]);
         $this->type->addDocument($doc);
         $this->index->refresh();

@@ -1,29 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace EsExample;
+namespace Php;
 
-use Elastica\Client;
 use Elastica\Document;
 use Elastica\Index;
 use Elastica\Request;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-reindex.html
  */
-final class ReIndexTest extends TestCase
+final class ReIndexTest extends TestBase
 {
-    /** @var Client */
-    private $client;
-
-    /**
-     * @throws \Elastica\Exception\InvalidException
-     * @throws \Elastica\Exception\ResponseException
-     */
-    public function setUp()
+    protected function createIndex()
     {
-        $this->client = new Client();
+        return;
     }
 
     public function testCopyDocuments()

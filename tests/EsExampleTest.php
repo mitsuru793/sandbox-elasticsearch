@@ -1,42 +1,14 @@
 <?php
 declare(strict_types=1);
 
-use Elastica\Client;
+namespace Php;
+
 use Elastica\Document;
 use Elastica\Result;
 use Elastica\Util;
-use PHPUnit\Framework\TestCase;
 
-final class EsExampleTest extends TestCase
+final class EsExampleTest extends TestBase
 {
-    /** @var \Elastica\Index */
-    private $index;
-
-    /** @var \Elastica\Type */
-    private $type;
-
-    /** @var Client */
-    private $client;
-
-    /**
-     * @throws \Elastica\Exception\InvalidException
-     * @throws \Elastica\Exception\ResponseException
-     */
-    public function setUp()
-    {
-        $this->client = new Client();
-
-        $this->index = $this->client->getIndex('test-index');
-
-        if ($this->index->exists()) {
-            $this->index->delete();
-        }
-
-        $this->index->create([
-        ], true);
-        $this->type = $this->index->getType('test-type');
-    }
-
     /**
      * https://www.elastic.co/guide/en/elasticsearch/guide/current/slop.html
      * @dataProvider slopProvider
@@ -199,6 +171,43 @@ final class EsExampleTest extends TestCase
             ['a OR b', 'a \|| b'],
             ['a && b', 'a \&& b'],
         ];
+    }
+
+    public function testMultiMatchWithPhrase()
+    {
+        $this->type->addDocuments([
+            new Document(1, ['name' => 'Yamada Taro', 'sex' => 'man']),
+            new Document(2, ['name' => 'Yamada Hanako', 'sex' => 'woman']),
+            new Document(3, ['name' => 'Suzuki Koji', 'sex' => 'man']),
+        ]);
+        $this->index->refresh();
+
+        $query = [
+            'query' => [
+                'term' => [],
+            ],
+            'sort' => [['_id' => 'asc']],
+        ];
+
+        $query['query']['term'] = [
+            'name' => 'yamada Taro',
+        ];
+        $resultSet = $this->type->search($query);
+        $results = $resultSet->getDocuments();
+        $this->assertEmpty($results);
+
+        $query['query']['term'] = [
+            'name' => 'yamada',
+        ];
+        $results = $resultSet->getDocuments();
+        $this->assertEmpty($results);
+
+        $query['query']['term'] = (object)[
+            'name' => 'Yamada',
+        ];
+        $resultSet = $this->type->search($query);
+        $results = $resultSet->getDocuments();
+        $this->assertEmpty($results);
     }
 }
 

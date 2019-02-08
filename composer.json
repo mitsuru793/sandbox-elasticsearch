@@ -13,5 +13,16 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Php\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Helper\\": "tests/Helper",
+            "Php\\": "tests/"
+        }
     }
 }
