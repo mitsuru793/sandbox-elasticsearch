@@ -29,7 +29,7 @@ abstract class TestBase extends TestCase
 
         $this->index = $this->client->getIndex('test-index');
         $this->createIndex();
-        $this->type = $this->index->getType('test-type');
+        $this->type = $this->index->getType('_doc');
     }
 
     /**
