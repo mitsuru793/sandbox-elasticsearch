@@ -11,6 +11,7 @@ use Elastica\ResultSet;
 use Elastica\Type;
 use Elastica\Type\Mapping;
 use PHPUnit\Framework\TestCase;
+use Tightenco\Collect\Support\Collection;
 
 abstract class TestBase extends TestCase
 {
@@ -85,6 +86,41 @@ abstract class TestBase extends TestCase
 
         $this->index->refresh();
         return $response;
+    }
+
+    protected function dump($value): void
+    {
+        if ($value instanceof ResultSet) {
+            $value = $value->getResponse()->getData();
+        }
+
+        if ($value instanceof Collection) {
+            $value = $value->toArray();
+        }
+
+        dump($value);
+    }
+
+
+    protected function dumpDocs(ResultSet $value): void
+    {
+        $docs = $value->getDocuments();
+        $docs = array_map(function (Document $doc) {
+            return $doc->toArray();
+        }, $docs);
+        dump($docs);
+    }
+
+    protected function dumpAgg(ResultSet $value, string $name): void
+    {
+        $agg = $value->getAggregation($name);
+        dump($agg);
+    }
+
+    protected function dumpAggs(ResultSet $value): void
+    {
+        $aggs = $value->getAggregations();
+        dump($aggs);
     }
 
     protected function assertCountDocs(int $expected, ResultSet $result)
