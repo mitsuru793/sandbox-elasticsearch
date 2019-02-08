@@ -7,7 +7,9 @@ use Elastica\Client;
 use Elastica\Document;
 use Elastica\Index;
 use Elastica\Response;
+use Elastica\ResultSet;
 use Elastica\Type;
+use Elastica\Type\Mapping;
 use PHPUnit\Framework\TestCase;
 
 abstract class TestBase extends TestCase
@@ -55,6 +57,13 @@ abstract class TestBase extends TestCase
         }
     }
 
+    protected function createMapping(array $properties)
+    {
+        $mapping = new Mapping($this->type);
+        $mapping->setProperties($properties);
+        $mapping->send();
+    }
+
     protected function addDoc(array $data): Response
     {
         $doc = new Document($this->nextId, $data);
@@ -76,5 +85,15 @@ abstract class TestBase extends TestCase
 
         $this->index->refresh();
         return $response;
+    }
+
+    protected function assertCountDocs(int $expected, ResultSet $result)
+    {
+        $this->assertCount($expected, $result->getDocuments());
+    }
+
+    protected function assertEmptyDocs(ResultSet $result)
+    {
+        $this->assertEmpty($result->getDocuments());
     }
 }
