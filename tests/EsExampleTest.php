@@ -15,8 +15,7 @@ final class EsExampleTest extends TestBase
      */
     public function testSlop($slop, $expected)
     {
-        $doc = new Document(1, ['title' => 'quick 1 2 fox']);
-        $this->type->addDocument($doc);
+        $this->addDoc(['title' => 'quick 1 2 fox']);
         $this->index->refresh();
 
         $resultSet = $this->type->search([
@@ -52,13 +51,13 @@ final class EsExampleTest extends TestBase
         ]);
         $mapping->send();
 
-        $docs = [];
-        $docs[] = new Document(1, ['name' => 'a', 'age' => 18]);
-        $docs[] = new Document(2, ['name' => 'b', 'age' => 20]);
-        $docs[] = new Document(3, ['name' => 'c', 'age' => 25]);
-        $docs[] = new Document(4, ['name' => 'e', 'age' => 18]);
-        $docs[] = new Document(5, ['name' => 'f', 'age' => 20]);
-        $this->type->addDocuments($docs);
+        $this->addDocs([
+            ['name' => 'a', 'age' => 18],
+            ['name' => 'b', 'age' => 20],
+            ['name' => 'c', 'age' => 25],
+            ['name' => 'e', 'age' => 18],
+            ['name' => 'f', 'age' => 20],
+        ]);
         $this->index->refresh();
 
         // without order
@@ -101,12 +100,11 @@ final class EsExampleTest extends TestBase
 
     public function testAndOrOperator()
     {
-        $docs = [];
-        $docs[] = new Document(1, ['name' => 'Yamada Taro', 'sex' => 'man']);
-        $docs[] = new Document(2, ['name' => 'Yamada Hanako', 'sex' => 'woman']);
-        $docs[] = new Document(3, ['name' => 'Suzuki Koji', 'sex' => 'man']);
-        $this->type->addDocuments($docs);
-        $this->index->refresh();
+        $this->addDocs([
+            ['name' => 'Yamada Taro', 'sex' => 'man'],
+            ['name' => 'Yamada Hanako', 'sex' => 'woman'],
+            ['name' => 'Suzuki Koji', 'sex' => 'man'],
+        ]);
 
         $query = [
             'query' => [
@@ -175,10 +173,10 @@ final class EsExampleTest extends TestBase
 
     public function testMultiMatchWithPhrase()
     {
-        $this->type->addDocuments([
-            new Document(1, ['name' => 'Yamada Taro', 'sex' => 'man']),
-            new Document(2, ['name' => 'Yamada Hanako', 'sex' => 'woman']),
-            new Document(3, ['name' => 'Suzuki Koji', 'sex' => 'man']),
+        $this->addDocs([
+            ['name' => 'Yamada Taro', 'sex' => 'man'],
+            ['name' => 'Yamada Hanako', 'sex' => 'woman'],
+            ['name' => 'Suzuki Koji', 'sex' => 'man'],
         ]);
         $this->index->refresh();
 

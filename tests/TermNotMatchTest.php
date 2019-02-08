@@ -34,12 +34,10 @@ final class TermNotMatchTest extends TestBase
 
     public function testMain()
     {
-        $doc = new Document(1, [
+        $this->addDoc([
             'full_text' => 'Quick Foxes!',
             'exact_value' => 'Quick Foxes!',
         ]);
-        $this->type->addDocument($doc);
-        $this->index->refresh();
 
         $query['query']['term']['exact_value'] = 'Quick Foxes!';
         $resultSet = $this->type->search($query);

@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace Php;
 
-use Elastica\Document;
-
 final class NestdDataTypeTest extends TestBase
 {
     public function testHoge()
     {
-        $doc = new Document(1, [
+        $doc = [
             'group' => 'fans',
             'user' => [
                 [
@@ -21,9 +19,8 @@ final class NestdDataTypeTest extends TestBase
                     'last' => 'Suzuki',
                 ],
             ],
-        ]);
-        $this->type->addDocument($doc);
-        $this->index->refresh();
+        ];
+        $this->addDoc($doc);
 
         $query['query']['bool']['must'] = [
             ['match' => ['user.first' => 'Taro']],
@@ -40,7 +37,7 @@ final class NestdDataTypeTest extends TestBase
                 'type' => 'nested',
             ],
         ]);
-        $this->type->addDocument($doc);
+        $this->addDoc($doc);
         $this->index->refresh();
 
         $resultSet = $this->type->search($query);
